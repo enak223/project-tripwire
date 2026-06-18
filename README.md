@@ -27,37 +27,37 @@ Not a rule dump. A detection engineering portfolio.
 
 ## 🏗️ Architecture
 
-\`\`\`
+```
 ┌──────────────────────────────────────────────────────────────────────┐
 │                       TRIPWIRE PIPELINE                              │
 │                                                                      │
-│  ┌──────────────┐      ┌──────────────┐      ┌──────────────────┐   │
-│  │   SIMULATE   │────▶│    DETECT    │────▶│    VALIDATE      │   │
-│  │              │      │              │      │                  │   │
-│  │ Atomic Red   │      │ Wazuh Rules  │      │ Alert Confirmed  │   │
-│  │ Team (ART)   │      │ Sigma Rules  │      │ Log Evidence     │   │
-│  │ Kali Linux   │      │ Decoders     │      │ No False Neg.    │   │
-│  └──────────────┘      └──────────────┘      └──────────────────┘   │
+│  ┌──────────────┐      ┌──────────────┐      ┌──────────────────┐    │
+│  │   SIMULATE   │────▶│    DETECT    │────▶ │    VALIDATE      │    │
+│  │              │      │              │      │                  │    │
+│  │ Atomic Red   │      │ Wazuh Rules  │      │ Alert Confirmed  │    │
+│  │ Team (ART)   │      │ Sigma Rules  │      │ Log Evidence     │    │
+│  │ Kali Linux   │      │ Decoders     │      │ No False Neg.    │    │
+│  └──────────────┘      └──────────────┘      └──────────────────┘    │
 │                                                       │              │
-│  ┌──────────────┐      ┌──────────────┐      ┌────────▼─────────┐   │
-│  │   DOCUMENT   │◀────│     MAP      │◀────│    TUNE          │   │
-│  │              │      │              │      │                  │   │
-│  │ Analyst      │      │ MITRE ATT&CK │      │ Threshold Adj.   │   │
-│  │ Runbook      │      │ Tactic/Tech  │      │ False Pos. Rate  │   │
-│  │ Triage Guide │      │ Sub-technique│      │ Rule Confidence  │   │
-│  └──────────────┘      └──────────────┘      └──────────────────┘   │
+│  ┌──────────────┐      ┌──────────────┐      ┌────────▼─────────┐    │
+│  │   DOCUMENT   │◀────│     MAP      │◀──── │    TUNE          │    │
+│  │              │      │              │      │                  │    │
+│  │ Analyst      │      │ MITRE ATT&CK │      │ Threshold Adj.   │    │
+│  │ Runbook      │      │ Tactic/Tech  │      │ False Pos. Rate  │    │
+│  │ Triage Guide │      │ Sub-technique│      │ Rule Confidence  │    │
+│  └──────────────┘      └──────────────┘      └──────────────────┘    │
 │                                                                      │
-│         ┌─────────────────────────────────────────┐                 │
-│         │         DETECTION COVERAGE MATRIX       │                 │
-│         │   ATT&CK Navigator heatmap per phase    │                 │
-│         │   Rule count by tactic · confidence     │                 │
-│         └─────────────────────────────────────────┘                 │
+│         ┌─────────────────────────────────────────┐                  │
+│         │         DETECTION COVERAGE MATRIX       │                  │
+│         │   ATT&CK Navigator heatmap per phase    │                  │
+│         │   Rule count by tactic · confidence     │                  │
+│         └─────────────────────────────────────────┘                  │
 └──────────────────────────────────────────────────────────────────────┘
-\`\`\`
+```
 
 **Rule Lifecycle:**
 
-\`\`\`
+```
 Atomic Red Team test selected (MITRE technique)
     └──▶ Attack simulated on homelab endpoint (Kali / Windows 11 / Ubuntu)
              └──▶ Wazuh ingests logs (Sysmon / Auditd / ossec agent)
@@ -66,26 +66,26 @@ Atomic Red Team test selected (MITRE technique)
                                         └──▶ MITRE ATT&CK technique mapped
                                                  └──▶ Analyst runbook documented
                                                           └──▶ Rule committed to library
-\`\`\`
+```
 
 ---
 
 ## 🧰 Tech Stack
 
-| Component              | Tool                        | Role                                                              |
-| ---------------------- | --------------------------- | ----------------------------------------------------------------- |
-| **SIEM**               | Wazuh 4.12                  | Log ingestion, rule engine, alert correlation, active response    |
-| **Rule Standard**      | Sigma                       | Vendor-neutral detection rule format for portability              |
-| **ATT&CK Framework**   | MITRE ATT&CK v15            | Tactic/technique mapping for every rule                           |
-| **ATT&CK Visualization** | ATT&CK Navigator          | Coverage heatmap generation per tactic                            |
-| **Attack Simulation**  | Atomic Red Team             | Validated test cases per technique (T-codes)                      |
-| **Windows Telemetry**  | Sysmon (SwiftOnSecurity cfg)| Process creation, network, registry, file event logging           |
-| **Linux Telemetry**    | Auditd                      | Syscall-level event logging on Ubuntu endpoints                   |
-| **Attacker Platform**  | Kali Linux                  | ART execution, manual attack simulation                           |
-| **Log Visualization**  | Wazuh Dashboard             | Real-time alert review and rule tuning                            |
-| **Scripting**          | Python 3.10+                | Coverage matrix generation, ATT&CK Navigator JSON export          |
-| **Host OS**            | Ubuntu 22.04                | Wazuh manager host (192.168.248.20)                               |
-| **Virtualization**     | VMware Workstation          | Homelab multi-VM environment                                      |
+| Component                | Tool                         | Role                                                           |
+| ------------------------ | ---------------------------- | -------------------------------------------------------------- |
+| **SIEM**                 | Wazuh 4.12                   | Log ingestion, rule engine, alert correlation, active response |
+| **Rule Standard**        | Sigma                        | Vendor-neutral detection rule format for portability           |
+| **ATT&CK Framework**     | MITRE ATT&CK v15             | Tactic/technique mapping for every rule                        |
+| **ATT&CK Visualization** | ATT&CK Navigator             | Coverage heatmap generation per tactic                         |
+| **Attack Simulation**    | Atomic Red Team              | Validated test cases per technique (T-codes)                   |
+| **Windows Telemetry**    | Sysmon (SwiftOnSecurity cfg) | Process creation, network, registry, file event logging        |
+| **Linux Telemetry**      | Auditd                       | Syscall-level event logging on Ubuntu endpoints                |
+| **Attacker Platform**    | Kali Linux                   | ART execution, manual attack simulation                        |
+| **Log Visualization**    | Wazuh Dashboard              | Real-time alert review and rule tuning                         |
+| **Scripting**            | Python 3.10+                 | Coverage matrix generation, ATT&CK Navigator JSON export       |
+| **Host OS**              | Ubuntu 22.04                 | Wazuh manager host (192.168.248.20)                            |
+| **Virtualization**       | VMware Workstation           | Homelab multi-VM environment                                   |
 
 ---
 
@@ -93,7 +93,7 @@ Atomic Red Team test selected (MITRE technique)
 
 ### 🪤 Detection Rule Library
 
-- Native **Wazuh XML rules** deployable directly to \`/var/ossec/etc/rules/\`
+- Native **Wazuh XML rules** deployable directly to `/var/ossec/etc/rules/`
 - Companion **Sigma rules** for every detection — portable to Splunk, Elastic, Microsoft Sentinel
 - Rules organized by MITRE ATT&CK tactic: Initial Access → Execution → Persistence → Privilege Escalation → Defense Evasion → Credential Access → Discovery → Lateral Movement → Collection → Exfiltration → Command & Control → Impact
 - Rule severity levels aligned to Wazuh's 1–15 scale with documented rationale
@@ -111,11 +111,11 @@ Atomic Red Team test selected (MITRE technique)
 - ATT&CK Navigator JSON heatmap generated from the rule library — shows exactly which techniques are covered
 - Coverage tracked by tactic phase, technique, and sub-technique
 - Confidence scoring per rule: High / Medium / Low based on validation results and false positive rate
-- Updated via \`scripts/generate_navigator.py\`
+- Updated via `scripts/generate_navigator.py`
 
 ### 📋 Analyst Runbooks
 
-- Every rule ships with a markdown runbook in \`rules/<tactic>/<technique>/RUNBOOK.md\`
+- Every rule ships with a markdown runbook in `rules/<tactic>/<technique>/RUNBOOK.md`
 - Runbook structure: Alert Summary → What Triggered It → False Positive Scenarios → Triage Steps → Escalation Criteria → References
 - Written for a Tier 1 SOC analyst — actionable within 5 minutes of alert receipt
 
@@ -129,7 +129,7 @@ Atomic Red Team test selected (MITRE technique)
 
 ## 📁 Project Structure
 
-\`\`\`
+```
 project-tripwire/
 ├── README.md
 ├── .gitignore
@@ -211,7 +211,7 @@ project-tripwire/
     ├── sigma_conversion_guide.md
     ├── art_testing_guide.md
     └── wazuh_rule_levels.md
-\`\`\`
+```
 
 ---
 
@@ -219,7 +219,7 @@ project-tripwire/
 
 ### Prerequisites
 
-\`\`\`
+```
 - Wazuh 4.12 manager running (192.168.248.20 — ubuntuai VM)
 - Wazuh agents enrolled on Windows 11 (192.168.248.128) and Ubuntu Web Server (192.168.248.139)
 - Sysmon installed on Windows 11 with SwiftOnSecurity config
@@ -227,68 +227,71 @@ project-tripwire/
 - Kali Linux (192.168.248.130) for Atomic Red Team execution
 - Python 3.10+
 - sigma-cli (for Sigma rule conversion)
-\`\`\`
+```
 
 ### 1. Clone the Repository
 
-\`\`\`bash
+```bash
 git clone https://github.com/enak223/project-tripwire.git
 cd project-tripwire
-\`\`\`
+```
 
 ### 2. Deploy Wazuh Decoders
 
-\`\`\`bash
-# Run on ubuntuai (192.168.248.20)
+> Run on **ubuntuai (192.168.248.20)**
+
+```bash
 sudo cp wazuh/decoders/sysmon_decoder.xml /var/ossec/etc/decoders/
 sudo cp wazuh/decoders/auditd_decoder.xml /var/ossec/etc/decoders/
 sudo cp wazuh/decoders/tripwire_decoder.xml /var/ossec/etc/decoders/
 sudo systemctl restart wazuh-manager
-\`\`\`
+```
 
 ### 3. Deploy Detection Rules
 
-\`\`\`bash
-# Deploy all rules at once
-sudo bash wazuh/deploy_rules.sh
+> Run on **ubuntuai (192.168.248.20)**
 
-# Verify rules loaded
+```bash
+sudo bash wazuh/deploy_rules.sh
 sudo /var/ossec/bin/wazuh-logtest
-\`\`\`
+```
 
 ### 4. Install Sysmon on Windows 11 (192.168.248.128)
 
-\`\`\`powershell
-# Run on Windows 11 VM as Administrator
+> Run on **Windows 11 VM as Administrator**
+
+```powershell
 .\Sysmon64.exe -accepteula -i sysmon\sysmon_config.xml
 Get-Service Sysmon64
-\`\`\`
+```
 
 ### 5. Configure Auditd on Ubuntu Endpoints
 
-\`\`\`bash
-# Run on ubuntu-webserver (192.168.248.139)
+> Run on **ubuntu-webserver (192.168.248.139)**
+
+```bash
 sudo bash auditd/deploy_auditd.sh
 sudo auditctl -l
-\`\`\`
+```
 
 ### 6. Validate Rules with Atomic Red Team
 
-\`\`\`bash
-# Run on Kali Linux (192.168.248.130)
-# See docs/art_testing_guide.md for full walkthrough
+> Run on **Kali Linux (192.168.248.130)** — see `docs/art_testing_guide.md` for full walkthrough
 
+```bash
 # Example: T1003.007
 sudo cat /proc/1/environ    # Triggers auditd → Wazuh rule 101003
-\`\`\`
+```
 
 ### 7. Generate ATT&CK Navigator Heatmap
 
-\`\`\`bash
+> Run on **ubuntuai (192.168.248.20)**
+
+```bash
 python scripts/generate_navigator.py \
     --rules-dir rules/ \
     --output coverage/tripwire_navigator.json
-\`\`\`
+```
 
 ---
 
@@ -296,7 +299,7 @@ python scripts/generate_navigator.py \
 
 ### T1003.007 — OS Credential Dumping: /proc Filesystem
 
-\`\`\`xml
+```xml
 <group name="tripwire,credential_access">
 
   <rule id="101003" level="12">
@@ -311,11 +314,11 @@ python scripts/generate_navigator.py \
   </rule>
 
 </group>
-\`\`\`
+```
 
 ### T1136.001 — Create Account: Local Account
 
-\`\`\`xml
+```xml
 <group name="tripwire,persistence">
 
   <rule id="101136" level="10">
@@ -340,11 +343,11 @@ python scripts/generate_navigator.py \
   </rule>
 
 </group>
-\`\`\`
+```
 
 ### T1070.003 — Clear Command History
 
-\`\`\`xml
+```xml
 <group name="tripwire,defense_evasion">
 
   <rule id="101070" level="9">
@@ -358,15 +361,15 @@ python scripts/generate_navigator.py \
   </rule>
 
 </group>
-\`\`\`
+```
 
 ---
 
 ## 📋 Sample Analyst Runbook
 
-\`\`\`markdown
+```
 # RUNBOOK: T1003.007 — OS Credential Dumping via /proc Filesystem
-**Rule ID:** 101003 | **Level:** 12 (Critical) | **Tactic:** Credential Access
+Rule ID: 101003 | Level: 12 (Critical) | Tactic: Credential Access
 
 ## Alert Summary
 A process read the /proc/<pid>/environ file of another process. This file exposes
@@ -399,13 +402,13 @@ Escalate immediately if:
 ## References
 - https://attack.mitre.org/techniques/T1003/007/
 - Validated with: ART Test T1003.007-1
-\`\`\`
+```
 
 ---
 
 ## 🏠 Homelab Environment
 
-\`\`\`
+```
 ┌──────────────────────────────────────────────────────────────┐
 │            TRIPWIRE HOMELAB — VMware Workstation             │
 │                                                              │
@@ -436,7 +439,7 @@ Escalate immediately if:
 │  │  Role: Wazuh agent, Sysmon telemetry, ART target     │    │
 │  └──────────────────────────────────────────────────────┘    │
 └──────────────────────────────────────────────────────────────┘
-\`\`\`
+```
 
 **Detection coverage across both OS families:** Windows 11 provides Sysmon-sourced telemetry (process creation, network connections, registry events) while Ubuntu provides auditd syscall-level visibility. Every Tripwire rule that applies to both platforms is validated on both.
 
@@ -444,10 +447,10 @@ Escalate immediately if:
 
 ## 🔐 Security Notes
 
-- Rule IDs in the \`101000–101999\` range are reserved for Tripwire — no conflict with Wazuh defaults, GhostNet (100600–100699), or NullByte (100500).
+- Rule IDs in the `101000–101999` range are reserved for Tripwire — no conflict with Wazuh defaults, GhostNet (100600–100699), or NullByte (100500).
 - No credentials, API keys, or host-identifying data committed to the repository.
 - Atomic Red Team tests are run only on owned homelab VMs — never against external or production systems.
-- Sigma rules are marked \`status: test\` until validated against live telemetry.
+- Sigma rules are marked `status: test` until validated against live telemetry.
 - **Authorized use only.** All detection content must only be deployed on systems you own or have explicit written authorization to monitor.
 
 ---
