@@ -1,2 +1,499 @@
 # 🪤 Project Tripwire
-SIEM Detection Rule Library — Wazuh · Sigma · MITRE ATT&CK · Atomic Red Team
+
+### SIEM Detection Rule Library — Wazuh · Sigma · MITRE ATT&CK · Atomic Red Team
+
+> *"Every rule is a trap. Every trap is a story. Tripwire makes sure attackers tell it."*
+
+[![Status](https://img.shields.io/badge/Status-Active%20Development-brightgreen?style=flat-square)](https://github.com/enak223)
+[![Stack](https://img.shields.io/badge/Stack-Wazuh%20%7C%20Sigma%20%7C%20Atomic%20Red%20Team%20%7C%20MITRE%20ATT%26CK-blue?style=flat-square)](https://github.com/enak223)
+[![Rules](https://img.shields.io/badge/Rules-Wazuh%20%7C%20Sigma-orange?style=flat-square)](https://github.com/enak223)
+[![License](https://img.shields.io/badge/License-MIT-lightgrey?style=flat-square)](https://github.com/enak223/project-tripwire/blob/main/LICENSE)
+
+---
+
+## 📌 Overview
+
+**Project Tripwire** is a curated detection rule library built for Wazuh SIEM, with every rule written in both native Wazuh XML format and portable Sigma format. Each rule is mapped to a specific MITRE ATT&CK technique, tested against real attack simulations using Atomic Red Team, and documented with the analyst context needed to act on an alert — not just receive one.
+
+It answers three questions for every detection:
+
+- **What are we detecting?** — A specific adversary behavior mapped to a MITRE ATT&CK technique, with the Wazuh rule and Sigma rule that catches it.
+- **Does it actually work?** — Every rule has a documented Atomic Red Team test case executed in the homelab against live endpoints, with the resulting Wazuh alert as proof.
+- **What do you do when it fires?** — Each rule ships with an analyst runbook: what the alert means, false positive context, triage steps, and escalation guidance.
+
+Not a rule dump. A detection engineering portfolio.
+
+---
+
+## 🏗️ Architecture
+
+\`\`\`
+┌──────────────────────────────────────────────────────────────────────┐
+│                       TRIPWIRE PIPELINE                              │
+│                                                                      │
+│  ┌──────────────┐      ┌──────────────┐      ┌──────────────────┐   │
+│  │   SIMULATE   │────▶│    DETECT    │────▶│    VALIDATE      │   │
+│  │              │      │              │      │                  │   │
+│  │ Atomic Red   │      │ Wazuh Rules  │      │ Alert Confirmed  │   │
+│  │ Team (ART)   │      │ Sigma Rules  │      │ Log Evidence     │   │
+│  │ Kali Linux   │      │ Decoders     │      │ No False Neg.    │   │
+│  └──────────────┘      └──────────────┘      └──────────────────┘   │
+│                                                       │              │
+│  ┌──────────────┐      ┌──────────────┐      ┌────────▼─────────┐   │
+│  │   DOCUMENT   │◀────│     MAP      │◀────│    TUNE          │   │
+│  │              │      │              │      │                  │   │
+│  │ Analyst      │      │ MITRE ATT&CK │      │ Threshold Adj.   │   │
+│  │ Runbook      │      │ Tactic/Tech  │      │ False Pos. Rate  │   │
+│  │ Triage Guide │      │ Sub-technique│      │ Rule Confidence  │   │
+│  └──────────────┘      └──────────────┘      └──────────────────┘   │
+│                                                                      │
+│         ┌─────────────────────────────────────────┐                 │
+│         │         DETECTION COVERAGE MATRIX       │                 │
+│         │   ATT&CK Navigator heatmap per phase    │                 │
+│         │   Rule count by tactic · confidence     │                 │
+│         └─────────────────────────────────────────┘                 │
+└──────────────────────────────────────────────────────────────────────┘
+\`\`\`
+
+**Rule Lifecycle:**
+
+\`\`\`
+Atomic Red Team test selected (MITRE technique)
+    └──▶ Attack simulated on homelab endpoint (Kali / Windows 11 / Ubuntu)
+             └──▶ Wazuh ingests logs (Sysmon / Auditd / ossec agent)
+                      └──▶ Custom Wazuh rule written → alert fires
+                               └──▶ Sigma rule authored for portability
+                                        └──▶ MITRE ATT&CK technique mapped
+                                                 └──▶ Analyst runbook documented
+                                                          └──▶ Rule committed to library
+\`\`\`
+
+---
+
+## 🧰 Tech Stack
+
+| Component              | Tool                        | Role                                                              |
+| ---------------------- | --------------------------- | ----------------------------------------------------------------- |
+| **SIEM**               | Wazuh 4.12                  | Log ingestion, rule engine, alert correlation, active response    |
+| **Rule Standard**      | Sigma                       | Vendor-neutral detection rule format for portability              |
+| **ATT&CK Framework**   | MITRE ATT&CK v15            | Tactic/technique mapping for every rule                           |
+| **ATT&CK Visualization** | ATT&CK Navigator          | Coverage heatmap generation per tactic                            |
+| **Attack Simulation**  | Atomic Red Team             | Validated test cases per technique (T-codes)                      |
+| **Windows Telemetry**  | Sysmon (SwiftOnSecurity cfg)| Process creation, network, registry, file event logging           |
+| **Linux Telemetry**    | Auditd                      | Syscall-level event logging on Ubuntu endpoints                   |
+| **Attacker Platform**  | Kali Linux                  | ART execution, manual attack simulation                           |
+| **Log Visualization**  | Wazuh Dashboard             | Real-time alert review and rule tuning                            |
+| **Scripting**          | Python 3.10+                | Coverage matrix generation, ATT&CK Navigator JSON export          |
+| **Host OS**            | Ubuntu 22.04                | Wazuh manager host (192.168.248.20)                               |
+| **Virtualization**     | VMware Workstation          | Homelab multi-VM environment                                      |
+
+---
+
+## ✨ Features
+
+### 🪤 Detection Rule Library
+
+- Native **Wazuh XML rules** deployable directly to \`/var/ossec/etc/rules/\`
+- Companion **Sigma rules** for every detection — portable to Splunk, Elastic, Microsoft Sentinel
+- Rules organized by MITRE ATT&CK tactic: Initial Access → Execution → Persistence → Privilege Escalation → Defense Evasion → Credential Access → Discovery → Lateral Movement → Collection → Exfiltration → Command & Control → Impact
+- Rule severity levels aligned to Wazuh's 1–15 scale with documented rationale
+- Each rule targets a specific log source: Sysmon (Windows), Auditd (Linux), or Wazuh agent (both)
+
+### 🧪 Atomic Red Team Validation
+
+- Every rule in the library has at least one documented Atomic Red Team test case
+- Tests executed live in the homelab against real endpoints — not mocked
+- Validation record includes: ART test ID, command executed, expected log artifact, Wazuh rule fired, alert level, time-to-detect
+- False negative testing: rules are tuned until detection is confirmed before committing
+
+### 🗺️ MITRE ATT&CK Coverage Matrix
+
+- ATT&CK Navigator JSON heatmap generated from the rule library — shows exactly which techniques are covered
+- Coverage tracked by tactic phase, technique, and sub-technique
+- Confidence scoring per rule: High / Medium / Low based on validation results and false positive rate
+- Updated via \`scripts/generate_navigator.py\`
+
+### 📋 Analyst Runbooks
+
+- Every rule ships with a markdown runbook in \`rules/<tactic>/<technique>/RUNBOOK.md\`
+- Runbook structure: Alert Summary → What Triggered It → False Positive Scenarios → Triage Steps → Escalation Criteria → References
+- Written for a Tier 1 SOC analyst — actionable within 5 minutes of alert receipt
+
+### 🔧 Wazuh Decoder Library
+
+- Custom decoders for log formats not natively parsed by Wazuh (Sysmon XML, custom auditd fields)
+- Decoder validation scripts confirm field extraction before rule deployment
+- Decoders designed to be additive — no modification of Wazuh default decoders
+
+---
+
+## 📁 Project Structure
+
+\`\`\`
+project-tripwire/
+├── README.md
+├── .gitignore
+│
+├── rules/
+│   ├── initial-access/
+│   │   └── T1566.001-phishing-attachment/
+│   │       ├── wazuh_rule.xml
+│   │       ├── sigma_rule.yml
+│   │       ├── RUNBOOK.md
+│   │       └── validation/
+│   │           ├── art_test.md
+│   │           └── alert_sample.json
+│   ├── execution/
+│   │   ├── T1059.001-powershell/
+│   │   ├── T1059.004-unix-shell/
+│   │   └── T1053.003-cron-job/         # ✅ Validated — GhostNet ART suite
+│   ├── persistence/
+│   │   ├── T1136.001-local-account/    # ✅ Validated — GhostNet ART suite
+│   │   └── T1543.002-systemd-service/
+│   ├── privilege-escalation/
+│   │   ├── T1548.003-sudo-caching/
+│   │   └── T1134.001-token-impersonation/
+│   ├── defense-evasion/
+│   │   ├── T1070.003-clear-history/    # ✅ Validated — GhostNet ART suite
+│   │   └── T1562.001-disable-security-tools/
+│   ├── credential-access/
+│   │   ├── T1003.007-proc-filesystem/  # ✅ Validated — GhostNet ART suite
+│   │   └── T1110.001-brute-force/
+│   ├── discovery/
+│   │   ├── T1046-network-scan/
+│   │   └── T1082-system-info/
+│   ├── lateral-movement/
+│   │   ├── T1021.004-ssh/
+│   │   └── T1570-lateral-tool-transfer/
+│   ├── collection/
+│   │   └── T1560.001-archive-collected-data/
+│   ├── exfiltration/
+│   │   └── T1048-exfil-over-alt-protocol/
+│   ├── command-and-control/
+│   │   ├── T1071.001-web-protocols/
+│   │   └── T1071.004-dns-c2/
+│   └── impact/
+│       └── T1486-data-encrypted-for-impact/
+│
+├── wazuh/
+│   ├── decoders/
+│   │   ├── sysmon_decoder.xml
+│   │   ├── auditd_decoder.xml
+│   │   └── tripwire_decoder.xml
+│   ├── ossec.conf.snippet
+│   └── deploy_rules.sh
+│
+├── sigma/
+│   ├── compiled/
+│   └── backends/
+│       ├── splunk_export.sh
+│       └── elastic_export.sh
+│
+├── scripts/
+│   ├── generate_navigator.py
+│   ├── validate_rules.py
+│   └── coverage_report.py
+│
+├── coverage/
+│   ├── tripwire_navigator.json
+│   └── coverage_matrix.md
+│
+├── sysmon/
+│   ├── sysmon_config.xml
+│   └── deploy_sysmon.ps1
+│
+├── auditd/
+│   ├── audit.rules
+│   └── deploy_auditd.sh
+│
+└── docs/
+    ├── rule_writing_guide.md
+    ├── sigma_conversion_guide.md
+    ├── art_testing_guide.md
+    └── wazuh_rule_levels.md
+\`\`\`
+
+---
+
+## ⚙️ Setup & Installation
+
+### Prerequisites
+
+\`\`\`
+- Wazuh 4.12 manager running (192.168.248.20 — ubuntuai VM)
+- Wazuh agents enrolled on Windows 11 (192.168.248.128) and Ubuntu Web Server (192.168.248.139)
+- Sysmon installed on Windows 11 with SwiftOnSecurity config
+- Auditd running on Ubuntu endpoints
+- Kali Linux (192.168.248.130) for Atomic Red Team execution
+- Python 3.10+
+- sigma-cli (for Sigma rule conversion)
+\`\`\`
+
+### 1. Clone the Repository
+
+\`\`\`bash
+git clone https://github.com/enak223/project-tripwire.git
+cd project-tripwire
+\`\`\`
+
+### 2. Deploy Wazuh Decoders
+
+\`\`\`bash
+# Run on ubuntuai (192.168.248.20)
+sudo cp wazuh/decoders/sysmon_decoder.xml /var/ossec/etc/decoders/
+sudo cp wazuh/decoders/auditd_decoder.xml /var/ossec/etc/decoders/
+sudo cp wazuh/decoders/tripwire_decoder.xml /var/ossec/etc/decoders/
+sudo systemctl restart wazuh-manager
+\`\`\`
+
+### 3. Deploy Detection Rules
+
+\`\`\`bash
+# Deploy all rules at once
+sudo bash wazuh/deploy_rules.sh
+
+# Verify rules loaded
+sudo /var/ossec/bin/wazuh-logtest
+\`\`\`
+
+### 4. Install Sysmon on Windows 11 (192.168.248.128)
+
+\`\`\`powershell
+# Run on Windows 11 VM as Administrator
+.\Sysmon64.exe -accepteula -i sysmon\sysmon_config.xml
+Get-Service Sysmon64
+\`\`\`
+
+### 5. Configure Auditd on Ubuntu Endpoints
+
+\`\`\`bash
+# Run on ubuntu-webserver (192.168.248.139)
+sudo bash auditd/deploy_auditd.sh
+sudo auditctl -l
+\`\`\`
+
+### 6. Validate Rules with Atomic Red Team
+
+\`\`\`bash
+# Run on Kali Linux (192.168.248.130)
+# See docs/art_testing_guide.md for full walkthrough
+
+# Example: T1003.007
+sudo cat /proc/1/environ    # Triggers auditd → Wazuh rule 101003
+\`\`\`
+
+### 7. Generate ATT&CK Navigator Heatmap
+
+\`\`\`bash
+python scripts/generate_navigator.py \
+    --rules-dir rules/ \
+    --output coverage/tripwire_navigator.json
+\`\`\`
+
+---
+
+## 🔧 Sample Detection Rules
+
+### T1003.007 — OS Credential Dumping: /proc Filesystem
+
+\`\`\`xml
+<group name="tripwire,credential_access">
+
+  <rule id="101003" level="12">
+    <if_sid>80792</if_sid>
+    <field name="audit.key">tripwire_proc_cred</field>
+    <description>Tripwire: Credential access via /proc filesystem — $(audit.exe) read /proc/$(audit.pid)/environ</description>
+    <mitre>
+      <id>T1003.007</id>
+    </mitre>
+    <group>tripwire_critical,credential_access,proc_filesystem</group>
+    <options>alert_by_email</options>
+  </rule>
+
+</group>
+\`\`\`
+
+### T1136.001 — Create Account: Local Account
+
+\`\`\`xml
+<group name="tripwire,persistence">
+
+  <rule id="101136" level="10">
+    <if_sid>5902</if_sid>
+    <match>useradd|adduser</match>
+    <description>Tripwire: New local account created — $(dstuser) by $(srcuser) [possible persistence]</description>
+    <mitre>
+      <id>T1136.001</id>
+    </mitre>
+    <group>tripwire_high,persistence,account_creation</group>
+  </rule>
+
+  <rule id="101137" level="14" timeframe="60" frequency="1">
+    <if_sid>101136</if_sid>
+    <time>0:00 - 6:00</time>
+    <description>Tripwire: Off-hours local account creation — $(dstuser) [high-confidence persistence attempt]</description>
+    <mitre>
+      <id>T1136.001</id>
+    </mitre>
+    <group>tripwire_critical,persistence,off_hours</group>
+    <options>alert_by_email</options>
+  </rule>
+
+</group>
+\`\`\`
+
+### T1070.003 — Clear Command History
+
+\`\`\`xml
+<group name="tripwire,defense_evasion">
+
+  <rule id="101070" level="9">
+    <if_sid>5715</if_sid>
+    <match>history -c|HISTFILE=/dev/null|unset HISTFILE|export HISTFILESIZE=0</match>
+    <description>Tripwire: Command history cleared or disabled — $(srcuser) on $(hostname) [defense evasion]</description>
+    <mitre>
+      <id>T1070.003</id>
+    </mitre>
+    <group>tripwire_high,defense_evasion,anti_forensics</group>
+  </rule>
+
+</group>
+\`\`\`
+
+---
+
+## 📋 Sample Analyst Runbook
+
+\`\`\`markdown
+# RUNBOOK: T1003.007 — OS Credential Dumping via /proc Filesystem
+**Rule ID:** 101003 | **Level:** 12 (Critical) | **Tactic:** Credential Access
+
+## Alert Summary
+A process read the /proc/<pid>/environ file of another process. This file exposes
+the environment variables of a running process, which frequently contain passwords,
+API keys, and session tokens passed via environment.
+
+## What Triggered It
+Auditd caught an openat() syscall against a /proc/*/environ path, tagged with
+the audit key tripwire_proc_cred. The rule fires on any process reading another
+process's environment — not its own.
+
+## False Positive Scenarios
+- Security monitoring agents performing legitimate process inspection
+- Container orchestration tools reading process state
+- Custom monitoring scripts — verify the executing binary against known good inventory
+
+## Triage Steps
+1. Identify the reading process: check audit.exe field in the alert
+2. Identify the target PID: cross-reference audit.pid with ps aux at time of alert
+3. Check if the target process held sensitive env vars
+4. Review preceding commands from the same user/session
+5. Check for lateral movement indicators within 10 minutes of alert time
+
+## Escalation Criteria
+Escalate immediately if:
+- Reading process is not a known monitoring tool
+- Target process is a web server, database, or secrets manager
+- Alert follows a recent privilege escalation or new account creation alert
+
+## References
+- https://attack.mitre.org/techniques/T1003/007/
+- Validated with: ART Test T1003.007-1
+\`\`\`
+
+---
+
+## 🏠 Homelab Environment
+
+\`\`\`
+┌──────────────────────────────────────────────────────────────┐
+│            TRIPWIRE HOMELAB — VMware Workstation             │
+│                                                              │
+│  VMnet: NAT / Host-Only (192.168.248.0/24)                   │
+│                                                              │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  VM 1: ubuntuai — Wazuh Manager + Rule Engine        │    │
+│  │  IP: 192.168.248.20                                  │    │
+│  │  Role: Wazuh 4.12, custom rules, decoders, coverage  │    │
+│  │        scripts, ATT&CK Navigator JSON generation     │    │
+│  └──────────────────────────────────────────────────────┘    │
+│                                                              │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  VM 2: ubuntu-webserver — Linux Detection Target     │    │
+│  │  IP: 192.168.248.139                                 │    │
+│  │  Role: Wazuh agent, Auditd telemetry, ART target     │    │
+│  └──────────────────────────────────────────────────────┘    │
+│                                                              │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  VM 3: Kali Linux — Attack Simulation                │    │
+│  │  IP: 192.168.248.130                                 │    │
+│  │  Role: Atomic Red Team execution, manual TTPs        │    │
+│  └──────────────────────────────────────────────────────┘    │
+│                                                              │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  VM 4: Windows 11 — Windows Detection Target         │    │
+│  │  IP: 192.168.248.128                                 │    │
+│  │  Role: Wazuh agent, Sysmon telemetry, ART target     │    │
+│  └──────────────────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────────┘
+\`\`\`
+
+**Detection coverage across both OS families:** Windows 11 provides Sysmon-sourced telemetry (process creation, network connections, registry events) while Ubuntu provides auditd syscall-level visibility. Every Tripwire rule that applies to both platforms is validated on both.
+
+---
+
+## 🔐 Security Notes
+
+- Rule IDs in the \`101000–101999\` range are reserved for Tripwire — no conflict with Wazuh defaults, GhostNet (100600–100699), or NullByte (100500).
+- No credentials, API keys, or host-identifying data committed to the repository.
+- Atomic Red Team tests are run only on owned homelab VMs — never against external or production systems.
+- Sigma rules are marked \`status: test\` until validated against live telemetry.
+- **Authorized use only.** All detection content must only be deployed on systems you own or have explicit written authorization to monitor.
+
+---
+
+## 🗺️ Roadmap
+
+| Phase | Feature                                                | Status         |
+| ----- | ------------------------------------------------------ | -------------- |
+| v0.1  | Repo scaffold + folder structure                       | ✅ Complete    |
+| v0.1  | Wazuh manager ready + agents enrolled (Win11 + Ubuntu) | ✅ Complete    |
+| v0.1  | Sysmon deployed on Windows 11                          | ✅ Complete    |
+| v0.1  | Auditd configured on Ubuntu endpoints                  | ✅ Complete    |
+| v0.2  | Seed rules from GhostNet ART suite (4 techniques)      | ✅ Complete    |
+| v0.2  | Custom decoders (Sysmon XML, Auditd)                   | 🔄 In Progress |
+| v0.3  | 10 rules across 5 tactics — all ART validated          | 🔄 In Progress |
+| v0.3  | Sigma companion rules for all Wazuh rules              | 🔄 In Progress |
+| v0.4  | Analyst runbook for every rule                         | 🔄 In Progress |
+| v0.4  | ATT&CK Navigator heatmap (auto-generated)              | 🔲 Planned     |
+| v0.5  | 25 rules across all 12 ATT&CK tactics                  | 🔲 Planned     |
+| v0.5  | Coverage matrix markdown report                        | 🔲 Planned     |
+| v1.0  | Sigma → Splunk SPL conversion pipeline                 | 🔲 Planned     |
+| v1.0  | Sigma → Elastic EQL conversion pipeline                | 🔲 Planned     |
+| v1.1  | Tripwire + GhostNet unified alert dashboard            | 🔲 Planned     |
+| v1.2  | CI pipeline — auto-validate rule XML on push           | 🔲 Planned     |
+
+---
+
+## 🔗 Related Projects
+
+| Project | Description | Link |
+| ------- | ----------- | ---- |
+| **Project GhostNet** | Passive network baselining & anomaly detection — Zeek · Suricata · Wazuh | [github.com/enak223/project-ghostnet](https://github.com/enak223/project-ghostnet) |
+| **Project NullByte** | Automated CVE detection & remediation reporting — Nmap · NVD API · AI | [github.com/enak223/project-nullbyte](https://github.com/enak223/project-nullbyte) |
+| **Agentic AI for Security** | AI-powered SOC automation — n8n · Claude API · Wazuh | [github.com/enak223/agentic-ai-for-security](https://github.com/enak223/agentic-ai-for-security) |
+
+---
+
+## 👤 Author
+
+**Eliezer Fuentes** — Cybersecurity Professional
+
+Detection Engineering | Threat Hunting | SOC Automation | Vulnerability Management
+
+[![GitHub](https://img.shields.io/badge/GitHub-enak223-181717?style=flat&logo=github)](https://github.com/enak223)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-eliezerfuentes-0A66C2?style=flat&logo=linkedin)](https://www.linkedin.com/in/eliezerfuentes/)
+
+---
+
+> *Set the trap. Know the trigger. Never miss.*
