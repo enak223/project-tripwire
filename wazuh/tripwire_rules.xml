@@ -91,4 +91,28 @@
     <group>tripwire,persistence,systemd_service</group>
   </rule>
 
+  <!-- T1562.001 — Defense Evasion: Disable Security Tools -->
+  <!-- Layer 1: Wazuh agent disconnected (agent was stopped/killed) -->
+  <rule id="101010" level="14">
+    <if_sid>506</if_sid>
+    <match>ubuntu-webserver</match>
+    <description>Tripwire [T1562.001]: Wazuh agent on ubuntu-webserver stopped — possible security tool impairment</description>
+    <mitre>
+      <id>T1562.001</id>
+    </mitre>
+    <group>tripwire,defense_evasion,disable_tools</group>
+  </rule>
+
+  <!-- Layer 2: Auditd service stopped via journald -->
+  <rule id="101011" level="14">
+    <if_sid>1002</if_sid>
+    <match>auditd.service|wazuh-agent.service</match>
+    <regex>Stopped|Stopping|deactivating</regex>
+    <description>Tripwire [T1562.001]: Security service stopped — auditd or Wazuh agent deactivated</description>
+    <mitre>
+      <id>T1562.001</id>
+    </mitre>
+    <group>tripwire,defense_evasion,disable_tools</group>
+  </rule>
+
 </group>
