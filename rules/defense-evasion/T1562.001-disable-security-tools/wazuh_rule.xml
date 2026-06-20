@@ -1,0 +1,44 @@
+<!-- Tripwire Rule: T1562.001 — Impair Defenses: Disable or Modify Tools -->
+<!-- Rule IDs: 101010 (agent stop), 5402 overwrite (sudo tool disable) -->
+<!-- Level: 14 | Tactic: Defense Evasion -->
+<!-- Validated: Yes | Platform: Linux (ubuntu-webserver 192.168.248.139) -->
+
+<group name="tripwire">
+
+  <!-- Layer 1: Wazuh agent stopped — direct agent impairment -->
+  <!-- Chains from rule 506 (Wazuh agent stopped) -->
+  <rule id="101010" level="14">
+    <if_sid>506</if_sid>
+    <match>ubuntu-webserver</match>
+    <description>Tripwire [T1562.001]: Wazuh agent on ubuntu-webserver stopped — possible security tool impairment</description>
+    <mitre>
+      <id>T1562.001</id>
+    </mitre>
+    <group>tripwire,defense_evasion,disable_tools</group>
+  </rule>
+
+  <!-- Layer 2: Overwrite built-in 5402 to catch sudo stop/disable of security tools -->
+  <!-- Original 5402: "Successful sudo to ROOT executed" (level 3) -->
+  <!-- Overwritten to: T1562.001 detection when target is a security service -->
+  <rule id="5402" level="14" overwrite="yes">
+    <if_sid>5400</if_sid>
+    <regex> ; USER=root ; COMMAND=.*systemctl.*(stop|disable|mask).*(auditd|wazuh|ossec|fail2ban|apparmor)| ; USER=root ; TSID=\S+ ; COMMAND=.*systemctl.*(stop|disable|mask).*(auditd|wazuh|ossec|fail2ban|apparmor)</regex>
+    <description>Tripwire [T1562.001]: Security tool disabled via sudo — $(command)</description>
+    <mitre>
+      <id>T1562.001</id>
+    </mitre>
+    <group>tripwire,defense_evasion,disable_tools,sudo</group>
+  </rule>
+
+  <!-- Restore standard sudo-to-root detection for non-security-tool commands -->
+  <rule id="101011" level="3">
+    <if_sid>5400</if_sid>
+    <regex> ; USER=root ; COMMAND=| ; USER=root ; TSID=\S+ ; COMMAND=</regex>
+    <description>Successful sudo to ROOT executed.</description>
+    <mitre>
+      <id>T1548.003</id>
+    </mitre>
+    <group>sudo,pci_dss_10.2.5,pci_dss_10.2.2,gpg13_7.6,gpg13_7.8,gpg13_7.13,gdpr_IV_32.2,hipaa_164.312.b,nist_800_53_AU.14,nist_800_53_AC.7,nist_800_53_AC.6,tsc_CC6.8,tsc_CC7.2,tsc_CC7.3</group>
+  </rule>
+
+</group>

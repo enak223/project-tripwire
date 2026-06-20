@@ -1,0 +1,20 @@
+{
+  "rule": {
+    "id": "101010",
+    "level": 14,
+    "description": "Tripwire [T1562.001]: Wazuh agent on ubuntu-webserver stopped — possible security tool impairment",
+    "mitre": {
+      "id": ["T1562.001"],
+      "tactic": ["Defense Evasion"],
+      "technique": ["Impair Defenses: Disable or Modify Tools"]
+    },
+    "groups": ["tripwire", "defense_evasion", "disable_tools"]
+  },
+  "agent": {
+    "name": "wazuh-manager",
+    "ip": "192.168.248.20"
+  },
+  "data": {
+    "log": "ossec: Agent stopped: ubuntu-webserver->any"
+  }
+}

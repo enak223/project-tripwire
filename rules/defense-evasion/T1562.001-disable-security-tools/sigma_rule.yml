@@ -1,0 +1,38 @@
+title: Security Tool Disabled or Impaired
+id: g3h9i7j6-8f1e-9g7h-ei0i-6k1f2g3h4i5j
+status: test
+description: >
+  Detects attempts to disable or stop security monitoring tools including
+  Wazuh agent, auditd, fail2ban, and apparmor via sudo systemctl commands,
+  or direct Wazuh agent termination. Attackers disable security tools to
+  blind defenders before or during an intrusion.
+references:
+  - https://attack.mitre.org/techniques/T1562/001/
+  - https://github.com/enak223/project-tripwire
+author: Eliezer Fuentes
+date: 2026/06/20
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+logsource:
+  product: linux
+  service: syslog
+detection:
+  selection_sudo:
+    program: sudo
+    command|contains:
+      - 'systemctl stop auditd'
+      - 'systemctl stop wazuh'
+      - 'systemctl stop ossec'
+      - 'systemctl disable auditd'
+      - 'systemctl disable wazuh'
+      - 'systemctl mask auditd'
+      - 'systemctl mask wazuh'
+  selection_agent:
+    message|contains: 'Agent stopped'
+  condition: selection_sudo or selection_agent
+falsepositives:
+  - Authorized system maintenance stopping security services
+  - Automated testing environments
+  - Security tool upgrades requiring service restart
+level: critical
