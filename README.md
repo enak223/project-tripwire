@@ -532,4 +532,4 @@ Detection Engineering | Threat Hunting | SOC Automation | Vulnerability Manageme
 
 ---
 
-> *Set the trap. Know the trigger. Never miss.*
+> *Set the trap. Know the trigger. Never miss.* >
