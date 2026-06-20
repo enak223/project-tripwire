@@ -44,47 +44,47 @@ Not a rule dump. A detection engineering portfolio.
 
 │                                                                      │
 
-│  ┌──────────────┐      ┌──────────────┐      ┌──────────────────┐   │
+│  ┌──────────────┐      ┌──────────────┐      ┌──────────────────┐    │
 
-│  │   SIMULATE   │────▶│    DETECT    │────▶│    VALIDATE      │   │
+│  │   SIMULATE   │────▶│    DETECT    │────▶│    VALIDATE      │     │
 
-│  │              │      │              │      │                  │   │
+│  │              │      │              │      │                  │    │
 
-│  │ Atomic Red   │      │ Wazuh Rules  │      │ Alert Confirmed  │   │
+│  │ Atomic Red   │      │ Wazuh Rules  │      │ Alert Confirmed  │    │
 
-│  │ Team (ART)   │      │ Sigma Rules  │      │ Log Evidence     │   │
+│  │ Team (ART)   │      │ Sigma Rules  │      │ Log Evidence     │    │
 
-│  │ Kali Linux   │      │ Decoders     │      │ No False Neg.    │   │
+│  │ Kali Linux   │      │ Decoders     │      │ No False Neg.    │    │
 
-│  └──────────────┘      └──────────────┘      └──────────────────┘   │
+│  └──────────────┘      └──────────────┘      └──────────────────┘    │
 
 │                                                       │              │
 
-│  ┌──────────────┐      ┌──────────────┐      ┌────────▼─────────┐   │
+│  ┌──────────────┐      ┌──────────────┐      ┌────────▼─────────┐    │
 
-│  │   DOCUMENT   │◀────│     MAP      │◀────│    TUNE          │   │
+│  │   DOCUMENT   │◀────│     MAP      │◀────│    TUNE           │    │
 
-│  │              │      │              │      │                  │   │
+│  │              │      │              │      │                  │    │
 
-│  │ Analyst      │      │ MITRE ATT&CK │      │ Threshold Adj.   │   │
+│  │ Analyst      │      │ MITRE ATT&CK │      │ Threshold Adj.   │    │
 
-│  │ Runbook      │      │ Tactic/Tech  │      │ False Pos. Rate  │   │
+│  │ Runbook      │      │ Tactic/Tech  │      │ False Pos. Rate  │    │
 
-│  │ Triage Guide │      │ Sub-technique│      │ Rule Confidence  │   │
+│  │ Triage Guide │      │ Sub-technique│      │ Rule Confidence  │    │
 
-│  └──────────────┘      └──────────────┘      └──────────────────┘   │
+│  └──────────────┘      └──────────────┘      └──────────────────┘    │
 
 │                                                                      │
 
-│         ┌─────────────────────────────────────────┐                 │
+│         ┌─────────────────────────────────────────┐                  │
 
-│         │         DETECTION COVERAGE MATRIX       │                 │
+│         │         DETECTION COVERAGE MATRIX       │                  │
 
-│         │   ATT&CK Navigator heatmap per phase    │                 │
+│         │   ATT&CK Navigator heatmap per phase    │                  │
 
-│         │   Rule count by tactic · confidence     │                 │
+│         │   Rule count by tactic · confidence     │                  │
 
-│         └─────────────────────────────────────────┘                 │
+│         └─────────────────────────────────────────┘                  │
 
 └──────────────────────────────────────────────────────────────────────┘
 ```
