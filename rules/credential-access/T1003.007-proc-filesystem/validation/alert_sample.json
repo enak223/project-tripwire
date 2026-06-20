@@ -1,0 +1,29 @@
+{
+  "rule": {
+    "id": "101001",
+    "level": 12,
+    "description": "Tripwire [T1003.007]: /proc filesystem read — possible credential harvesting via environment variables",
+    "mitre": {
+      "id": ["T1003.007"],
+      "tactic": ["Credential Access"],
+      "technique": ["Proc Filesystem"]
+    },
+    "groups": ["tripwire", "credential_access", "proc_filesystem"]
+  },
+  "agent": {
+    "name": "ubuntu-webserver",
+    "ip": "192.168.248.139"
+  },
+  "data": {
+    "audit": {
+      "type": "SYSCALL",
+      "key": "tripwire_proc_cred",
+      "command": "cat",
+      "exe": "/usr/bin/cat",
+      "auid": "1000",
+      "uid": "0",
+      "syscall": "257",
+      "success": "yes"
+    }
+  }
+}

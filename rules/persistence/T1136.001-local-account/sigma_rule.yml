@@ -1,0 +1,29 @@
+title: Local Account Creation — Possible Persistence
+id: b7c4d2e1-3a8f-4b2c-9e5d-1f6a7b8c9d0e
+status: test
+description: >
+  Detects creation of a new local user account on a Linux system.
+  Attackers create local accounts to maintain persistent access to a compromised
+  system, ensuring continued presence even if other persistence mechanisms are removed.
+references:
+  - https://attack.mitre.org/techniques/T1136/001/
+  - https://github.com/enak223/project-tripwire
+author: Eliezer Fuentes
+date: 2026/06/19
+tags:
+  - attack.persistence
+  - attack.t1136.001
+logsource:
+  product: linux
+  service: syslog
+detection:
+  selection:
+    program: useradd
+  keywords:
+    - 'new user'
+  condition: selection and keywords
+falsepositives:
+  - Legitimate system administration creating service accounts
+  - Automated provisioning systems
+  - Software installation creating system users
+level: medium

@@ -1,0 +1,20 @@
+<!-- Tripwire Rule: T1003.007 — OS Credential Dumping: /proc Filesystem -->
+<!-- Rule ID: 101001 | Level: 12 | Tactic: Credential Access -->
+<!-- Validated: Yes | Platform: Linux (ubuntu-webserver 192.168.248.139) -->
+<!-- Auditd key: tripwire_proc_cred -->
+<!-- Note: Wazuh 4.12 has a known bug truncating audit.exe at hyphens (fixed in 4.14). -->
+<!--       Detection relies on audit.key field match against /proc/1/environ reads. -->
+
+<group name="tripwire">
+
+  <rule id="101001" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">tripwire_proc_cred</field>
+    <description>Tripwire [T1003.007]: /proc/1/environ read — possible credential harvesting via environment variables</description>
+    <mitre>
+      <id>T1003.007</id>
+    </mitre>
+    <group>tripwire,credential_access,proc_filesystem</group>
+  </rule>
+
+</group>

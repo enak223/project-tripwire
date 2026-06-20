@@ -1,0 +1,17 @@
+<!-- Tripwire Rule: T1136.001 — Create Account: Local Account -->
+<!-- Rule ID: 101002 | Level: 10 | Tactic: Persistence -->
+<!-- Validated: Yes | Platform: Linux (ubuntu-webserver 192.168.248.139) -->
+<!-- Parent SID: 5902 (Wazuh built-in: New user added to system via syslog/journald) -->
+
+<group name="tripwire">
+
+  <rule id="101002" level="10">
+    <if_sid>5902</if_sid>
+    <description>Tripwire [T1136.001]: New local user account created — possible persistence mechanism</description>
+    <mitre>
+      <id>T1136.001</id>
+    </mitre>
+    <group>tripwire,persistence,account_creation</group>
+  </rule>
+
+</group>

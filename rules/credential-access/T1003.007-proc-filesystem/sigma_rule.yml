@@ -1,0 +1,28 @@
+title: OS Credential Dumping via /proc Filesystem
+id: a8e5c3b2-1f4d-4e9a-b7c6-2d8f0e3a5c91
+status: test
+description: >
+  Detects attempts to read /proc/<pid>/environ, which exposes environment variables
+  of running processes. These frequently contain passwords, API keys, and session tokens.
+  A known attacker technique for credential harvesting on Linux systems.
+references:
+  - https://attack.mitre.org/techniques/T1003/007/
+  - https://github.com/enak223/project-tripwire
+author: Eliezer Fuentes
+date: 2026/06/19
+tags:
+  - attack.credential_access
+  - attack.t1003.007
+logsource:
+  product: linux
+  service: auditd
+detection:
+  selection:
+    type: SYSCALL
+    key: tripwire_proc_cred
+  condition: selection
+falsepositives:
+  - Security monitoring agents performing legitimate process inspection
+  - Container orchestration tools reading process state
+  - System daemons reading /proc/self/* (not /proc/<pid>/environ of other processes)
+level: high
