@@ -37,6 +37,7 @@ Not a rule dump. A detection engineering portfolio.
 ---
 
 ## 🏗️ Architecture
+```
 ┌──────────────────────────────────────────────────────────────────────┐
 
 │                       TRIPWIRE PIPELINE                              │
@@ -86,8 +87,10 @@ Not a rule dump. A detection engineering portfolio.
 │         └─────────────────────────────────────────┘                 │
 
 └──────────────────────────────────────────────────────────────────────┘
+```
 
 **Rule Lifecycle:**
+```
 Atomic Red Team test selected (MITRE technique)
 
 └──▶ Attack simulated on homelab endpoint (Kali / Windows 11 / Ubuntu)
@@ -104,6 +107,7 @@ Atomic Red Team test selected (MITRE technique)
 
 └──▶ Rule committed to library
 
+```
 ---
 
 ## 🧰 Tech Stack
@@ -164,6 +168,7 @@ Atomic Red Team test selected (MITRE technique)
 ---
 
 ## 📁 Project Structure
+```
 project-tripwire/
 
 ├── README.md
@@ -307,6 +312,7 @@ project-tripwire/
 ---
 
 ## ⚙️ Setup & Installation
+```
 
 ### Prerequisites
 
@@ -407,6 +413,7 @@ Detection rules are tuned to minimize noise:
 ---
 
 ## 🏠 Homelab Environment
+```
 ┌──────────────────────────────────────────────────────────────┐
 
 │            TRIPWIRE HOMELAB — VMware Workstation             │
@@ -466,6 +473,7 @@ Detection rules are tuned to minimize noise:
 │  └──────────────────────────────────────────────────────┘    │
 
 └──────────────────────────────────────────────────────────────┘
+```
 
 ---
 
