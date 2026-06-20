@@ -1,0 +1,24 @@
+{
+  "rule": {
+    "id": "101002",
+    "level": 10,
+    "description": "Tripwire [T1136.001]: New local user account created — possible persistence mechanism",
+    "mitre": {
+      "id": ["T1136.001"],
+      "tactic": ["Persistence"],
+      "technique": ["Create Account: Local Account"]
+    },
+    "groups": ["tripwire", "persistence", "account_creation"]
+  },
+  "agent": {
+    "name": "ubuntu-webserver",
+    "ip": "192.168.248.139"
+  },
+  "data": {
+    "dstuser": "tripwire-test4",
+    "uid": "1005",
+    "gid": "1005",
+    "home": "/home/tripwire-test4",
+    "shell": "/bin/sh"
+  }
+}

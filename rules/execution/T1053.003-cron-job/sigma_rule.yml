@@ -1,0 +1,32 @@
+title: Crontab Entry Modified — Possible Persistence
+id: d0e6f4g3-5c8b-6d4e-bf7f-3h8c9d0e1f2g
+status: test
+description: >
+  Detects modification of crontab entries on Linux systems. Attackers use cron
+  jobs to establish persistent access, ensuring malicious code executes automatically
+  on a schedule, surviving reboots and session termination.
+references:
+  - https://attack.mitre.org/techniques/T1053/003/
+  - https://github.com/enak223/project-tripwire
+author: Eliezer Fuentes
+date: 2026/06/19
+tags:
+  - attack.execution
+  - attack.persistence
+  - attack.t1053.003
+logsource:
+  product: linux
+  service: syslog
+detection:
+  selection:
+    program: crontab
+  keywords:
+    - REPLACE
+    - BEGIN EDIT
+    - NEW
+  condition: selection
+falsepositives:
+  - Legitimate scheduled task management by administrators
+  - Software packages installing their own cron jobs
+  - Monitoring agents updating their schedules
+level: medium

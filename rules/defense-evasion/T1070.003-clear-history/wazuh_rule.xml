@@ -1,0 +1,24 @@
+<!-- Tripwire Rule: T1070.003 — Indicator Removal: Clear Command History -->
+<!-- Rule ID: 101004 | Level: 9 | Tactic: Defense Evasion -->
+<!-- Validated: Yes | Platform: Linux (ubuntu-webserver 192.168.248.139) -->
+<!-- Auditd watch: /home/<user>/.bash_history and /root/.bash_history -->
+
+<group name="tripwire">
+
+  <rule id="101003" level="0" noalert="1">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">tripwire_clear_history</field>
+    <description>Tripwire base: clear history key match</description>
+  </rule>
+
+  <rule id="101004" level="9">
+    <if_sid>101003</if_sid>
+    <field name="audit.command" negate="yes">gvfsd-metadata|systemd|dconf|tracker|evolution|nautilus|bash|sh|vim|nano|cp|mv</field>
+    <description>Tripwire [T1070.003]: .bash_history modified — possible anti-forensics activity</description>
+    <mitre>
+      <id>T1070.003</id>
+    </mitre>
+    <group>tripwire,defense_evasion,anti_forensics</group>
+  </rule>
+
+</group>

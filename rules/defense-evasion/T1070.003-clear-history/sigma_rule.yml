@@ -1,0 +1,28 @@
+title: Command History Cleared or Modified
+id: c9d5e3f2-4b7a-5c3d-ae6e-2g7b8c9d0e1f
+status: test
+description: >
+  Detects modification or clearing of bash command history files (.bash_history).
+  Attackers clear command history to remove evidence of their activity on a
+  compromised system, a common anti-forensics technique.
+references:
+  - https://attack.mitre.org/techniques/T1070/003/
+  - https://github.com/enak223/project-tripwire
+author: Eliezer Fuentes
+date: 2026/06/19
+tags:
+  - attack.defense_evasion
+  - attack.t1070.003
+logsource:
+  product: linux
+  service: auditd
+detection:
+  selection:
+    type: SYSCALL
+    key: tripwire_clear_history
+  condition: selection
+falsepositives:
+  - Terminal emulators writing history on session close
+  - Text editors saving .bash_history backups
+  - Backup scripts touching home directories
+level: medium

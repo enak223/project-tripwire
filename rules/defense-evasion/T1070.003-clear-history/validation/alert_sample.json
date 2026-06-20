@@ -1,0 +1,29 @@
+{
+  "rule": {
+    "id": "101004",
+    "level": 9,
+    "description": "Tripwire [T1070.003]: .bash_history modified — possible anti-forensics activity",
+    "mitre": {
+      "id": ["T1070.003"],
+      "tactic": ["Defense Evasion"],
+      "technique": ["Indicator Removal: Clear Command History"]
+    },
+    "groups": ["tripwire", "defense_evasion", "anti_forensics"]
+  },
+  "agent": {
+    "name": "ubuntu-webserver",
+    "ip": "192.168.248.139"
+  },
+  "data": {
+    "audit": {
+      "type": "SYSCALL",
+      "key": "tripwire_clear_history",
+      "command": "bash",
+      "exe": "/usr/bin/bash",
+      "auid": "1000",
+      "uid": "1000",
+      "syscall": "257",
+      "success": "yes"
+    }
+  }
+}

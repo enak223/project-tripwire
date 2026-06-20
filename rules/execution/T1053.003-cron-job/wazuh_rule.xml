@@ -1,0 +1,17 @@
+<!-- Tripwire Rule: T1053.003 — Scheduled Task/Job: Cron -->
+<!-- Rule ID: 101005 | Level: 10 | Tactic: Execution / Persistence -->
+<!-- Validated: Yes | Platform: Linux (ubuntu-webserver 192.168.248.139) -->
+<!-- Parent SID: 2832 (Wazuh built-in: Crontab entry changed via syslog/journald) -->
+
+<group name="tripwire">
+
+  <rule id="101005" level="10">
+    <if_sid>2832</if_sid>
+    <description>Tripwire [T1053.003]: Crontab entry modified — possible scheduled task persistence</description>
+    <mitre>
+      <id>T1053.003</id>
+    </mitre>
+    <group>tripwire,execution,persistence,cron</group>
+  </rule>
+
+</group>
