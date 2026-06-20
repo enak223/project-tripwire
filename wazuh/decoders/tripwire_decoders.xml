@@ -1,0 +1,7 @@
+<!-- Project Tripwire — Custom Decoders -->
+<!-- Maps sshd-session (Ubuntu 22.04+ split SSH daemon) to sshd decoder chain -->
+
+<decoder name="sshd-session">
+  <program_name>^sshd-session</program_name>
+  <parent>sshd</parent>
+</decoder>

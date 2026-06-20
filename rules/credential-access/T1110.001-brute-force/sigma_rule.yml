@@ -1,0 +1,30 @@
+title: SSH Brute Force — Password Guessing
+id: e1f7g5h4-6d9c-7e5f-cg8g-4i9d0e1f2g3h
+status: test
+description: >
+  Detects SSH brute force attempts — repeated failed authentication from the same
+  source IP. Attackers use automated tools like Hydra to guess passwords on
+  SSH-exposed systems, a primary initial access technique on Linux.
+references:
+  - https://attack.mitre.org/techniques/T1110/001/
+  - https://github.com/enak223/project-tripwire
+author: Eliezer Fuentes
+date: 2026/06/20
+tags:
+  - attack.credential_access
+  - attack.t1110.001
+logsource:
+  product: linux
+  service: sshd
+detection:
+  selection:
+    program: sshd-session
+  keywords:
+    - 'Invalid user'
+    - 'Failed password'
+  condition: selection | count() by src_ip > 8
+falsepositives:
+  - Legitimate users mistyping passwords repeatedly
+  - Automated deployment scripts with incorrect credentials
+  - Misconfigured SSH clients
+level: high

@@ -1,0 +1,32 @@
+<!-- Tripwire Rule: T1110.001 — Brute Force: Password Guessing -->
+<!-- Rule IDs: 101006, 101007 | Level: 14 | Tactic: Credential Access -->
+<!-- Validated: Yes | Platform: Linux (ubuntu-webserver 192.168.248.139) -->
+<!-- Attacker: Kali Linux (192.168.248.130) via Hydra -->
+<!-- Parent SIDs: 5712 (non-existent user BF), 5720 (valid user BF) -->
+<!-- Decoder: wazuh/decoders/tripwire_decoders.xml maps sshd-session to sshd chain -->
+
+<group name="tripwire">
+
+  <!-- Brute force against non-existent user (chains from built-in 5712) -->
+  <rule id="101006" level="14">
+    <if_matched_sid>5712</if_matched_sid>
+    <same_source_ip />
+    <description>Tripwire [T1110.001]: SSH brute force — non-existent user from $(srcip)</description>
+    <mitre>
+      <id>T1110.001</id>
+    </mitre>
+    <group>tripwire,credential_access,brute_force</group>
+  </rule>
+
+  <!-- Brute force against valid user (chains from built-in 5720) -->
+  <rule id="101007" level="14">
+    <if_matched_sid>5720</if_matched_sid>
+    <same_source_ip />
+    <description>Tripwire [T1110.001]: SSH brute force — valid user from $(srcip)</description>
+    <mitre>
+      <id>T1110.001</id>
+    </mitre>
+    <group>tripwire,credential_access,brute_force</group>
+  </rule>
+
+</group>

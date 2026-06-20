@@ -23,10 +23,17 @@
     <group>tripwire,persistence,account_creation</group>
   </rule>
 
-  <!-- T1070.003 — Defense Evasion: Clear Command History -->
-  <rule id="101004" level="9">
+  <!-- T1070.003 — Defense Evasion: Clear History (base match) -->
+  <rule id="101003" level="0" noalert="1">
     <if_sid>80700</if_sid>
     <field name="audit.key">tripwire_clear_history</field>
+    <description>Tripwire base: clear history key match</description>
+  </rule>
+
+  <!-- T1070.003 — Defense Evasion: Clear Command History -->
+  <rule id="101004" level="9">
+    <if_sid>101003</if_sid>
+    <field name="audit.command" negate="yes">gvfsd-metadata|systemd|dconf|tracker|evolution|nautilus|bash|sh|vim|nano|cp|mv</field>
     <description>Tripwire [T1070.003]: .bash_history modified — possible anti-forensics activity</description>
     <mitre>
       <id>T1070.003</id>
@@ -42,6 +49,28 @@
       <id>T1053.003</id>
     </mitre>
     <group>tripwire,execution,persistence,cron</group>
+  </rule>
+
+  <!-- T1110.001 — Credential Access: Brute Force: Password Guessing (non-existent user) -->
+  <rule id="101006" level="14">
+    <if_matched_sid>5712</if_matched_sid>
+    <same_source_ip />
+    <description>Tripwire [T1110.001]: SSH brute force — non-existent user from $(srcip)</description>
+    <mitre>
+      <id>T1110.001</id>
+    </mitre>
+    <group>tripwire,credential_access,brute_force</group>
+  </rule>
+
+  <!-- T1110.001 — Credential Access: Brute Force: Password Guessing (valid user) -->
+  <rule id="101007" level="14">
+    <if_matched_sid>5720</if_matched_sid>
+    <same_source_ip />
+    <description>Tripwire [T1110.001]: SSH brute force — valid user from $(srcip)</description>
+    <mitre>
+      <id>T1110.001</id>
+    </mitre>
+    <group>tripwire,credential_access,brute_force</group>
   </rule>
 
 </group>
