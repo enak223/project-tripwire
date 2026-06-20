@@ -1,0 +1,29 @@
+{
+  "rule": {
+    "id": "101009",
+    "level": 11,
+    "description": "Tripwire [T1543.003]: Systemd service file created or modified by tee — possible persistence",
+    "mitre": {
+      "id": ["T1543.003"],
+      "tactic": ["Persistence"],
+      "technique": ["Create or Modify System Process: Systemd Service"]
+    },
+    "groups": ["tripwire", "persistence", "systemd_service"]
+  },
+  "agent": {
+    "name": "ubuntu-webserver",
+    "ip": "192.168.248.139"
+  },
+  "data": {
+    "audit": {
+      "type": "SYSCALL",
+      "key": "tripwire_systemd_service",
+      "command": "tee",
+      "auid": "1000",
+      "uid": "0",
+      "syscall": "257",
+      "success": "yes",
+      "path": "/etc/systemd/system/tripwire-test.service"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+<!-- Tripwire Rule: T1543.003 — Create/Modify System Process: Systemd Service -->
+<!-- Rule IDs: 101008, 101009 | Level: 11 | Tactic: Persistence -->
+<!-- Validated: Yes | Platform: Linux (ubuntu-webserver 192.168.248.139) -->
+<!-- Auditd watch: /etc/systemd/system and /usr/lib/systemd/system -->
+
+<group name="tripwire">
+
+  <rule id="101008" level="0" noalert="1">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">tripwire_systemd_service</field>
+    <description>Tripwire base: systemd service file change detected</description>
+  </rule>
+
+  <rule id="101009" level="11">
+    <if_sid>101008</if_sid>
+    <field name="audit.command" negate="yes">systemd|snapd|apt|dpkg|snap|update</field>
+    <description>Tripwire [T1543.003]: Systemd service file created or modified by $(audit.command) — possible persistence</description>
+    <mitre>
+      <id>T1543.003</id>
+    </mitre>
+    <group>tripwire,persistence,systemd_service</group>
+  </rule>
+
+</group>

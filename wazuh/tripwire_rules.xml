@@ -73,4 +73,22 @@
     <group>tripwire,credential_access,brute_force</group>
   </rule>
 
+  <!-- T1543.003 — Persistence: Create/Modify Systemd Service (base match) -->
+  <rule id="101008" level="0" noalert="1">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">tripwire_systemd_service</field>
+    <description>Tripwire base: systemd service file change detected</description>
+  </rule>
+
+  <!-- T1543.003 — Alert when non-system process modifies systemd service files -->
+  <rule id="101009" level="11">
+    <if_sid>101008</if_sid>
+    <field name="audit.command" negate="yes">systemd|snapd|apt|dpkg|snap|update</field>
+    <description>Tripwire [T1543.003]: Systemd service file created or modified by $(audit.command) — possible persistence</description>
+    <mitre>
+      <id>T1543.003</id>
+    </mitre>
+    <group>tripwire,persistence,systemd_service</group>
+  </rule>
+
 </group>
