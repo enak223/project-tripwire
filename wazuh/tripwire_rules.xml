@@ -1,0 +1,47 @@
+<!-- Project Tripwire — Detection Rules | IDs: 101000-101999 -->
+
+<group name="tripwire">
+
+  <!-- T1003.007 — Credential Access: /proc Filesystem -->
+  <rule id="101001" level="12">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">tripwire_proc_cred</field>
+    <description>Tripwire [T1003.007]: /proc/1/environ read — possible credential harvesting via environment variables</description>
+    <mitre>
+      <id>T1003.007</id>
+    </mitre>
+    <group>tripwire,credential_access,proc_filesystem</group>
+  </rule>
+
+  <!-- T1136.001 — Persistence: Local Account Creation -->
+  <rule id="101002" level="10">
+    <if_sid>5902</if_sid>
+    <description>Tripwire [T1136.001]: New local user account created — possible persistence mechanism</description>
+    <mitre>
+      <id>T1136.001</id>
+    </mitre>
+    <group>tripwire,persistence,account_creation</group>
+  </rule>
+
+  <!-- T1070.003 — Defense Evasion: Clear Command History -->
+  <rule id="101004" level="9">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">tripwire_clear_history</field>
+    <description>Tripwire [T1070.003]: .bash_history modified — possible anti-forensics activity</description>
+    <mitre>
+      <id>T1070.003</id>
+    </mitre>
+    <group>tripwire,defense_evasion,anti_forensics</group>
+  </rule>
+
+  <!-- T1053.003 — Execution/Persistence: Cron Job -->
+  <rule id="101005" level="10">
+    <if_sid>2832</if_sid>
+    <description>Tripwire [T1053.003]: Crontab entry modified — possible scheduled task persistence</description>
+    <mitre>
+      <id>T1053.003</id>
+    </mitre>
+    <group>tripwire,execution,persistence,cron</group>
+  </rule>
+
+</group>

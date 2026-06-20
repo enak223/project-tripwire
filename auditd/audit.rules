@@ -1,0 +1,20 @@
+# Project Tripwire — Audit Rules
+# Validated on ubuntu-webserver (192.168.248.139) — Wazuh Agent + Auditd 4.1.2
+
+# T1136.001 — Local Account Creation
+-w /etc/passwd -p wa -k tripwire_account_create
+-w /etc/shadow -p wa -k tripwire_account_create
+-w /etc/group -p wa -k tripwire_account_create
+-a always,exit -F arch=b64 -S execve -F exe=/usr/sbin/useradd -k tripwire_account_create
+-a always,exit -F arch=b64 -S execve -F exe=/usr/sbin/adduser -k tripwire_account_create
+
+# T1070.003 — Clear Command History
+# Scoped to .bash_history only — broad /home watch causes FP noise from gvfsd-metadata
+-w /home/u-webserver/.bash_history -p wa -k tripwire_clear_history
+-w /root/.bash_history -p wa -k tripwire_clear_history
+
+# T1053.003 — Cron Job Persistence
+-w /etc/cron.d -p wa -k tripwire_cron
+-w /etc/crontab -p wa -k tripwire_cron
+-w /var/spool/cron/crontabs -p wa -k tripwire_cron
+-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/crontab -k tripwire_cron
