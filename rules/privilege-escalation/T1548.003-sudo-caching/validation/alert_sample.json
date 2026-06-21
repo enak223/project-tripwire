@@ -1,0 +1,24 @@
+{
+  "rule": {
+    "id": "5402",
+    "level": 3,
+    "description": "Successful sudo to ROOT executed.",
+    "mitre": {
+      "id": ["T1548.003"],
+      "tactic": ["Privilege Escalation", "Defense Evasion"],
+      "technique": ["Sudo and Sudo Caching"]
+    },
+    "groups": ["syslog", "sudo"]
+  },
+  "agent": {
+    "name": "ubuntu-webserver",
+    "ip": "192.168.248.139"
+  },
+  "data": {
+    "srcuser": "u-webserver",
+    "dstuser": "root",
+    "command": "/usr/bin/id",
+    "tty": "/dev/pts/0",
+    "pwd": "/home/u-webserver"
+  }
+}

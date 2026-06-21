@@ -1,0 +1,32 @@
+title: Sudo Privilege Escalation — Sudo and Sudo Caching
+id: j6k2l0m9-1i4h-2j0k-hl3l-9n4i5j6k7l8m
+status: test
+description: >
+  Detects sudo usage for privilege escalation on Linux systems. Attackers
+  abuse sudo to execute commands as root, enumerate sudo permissions via
+  sudo -l, and leverage sudo timestamp caching to maintain elevated access
+  without repeated password prompts.
+references:
+  - https://attack.mitre.org/techniques/T1548/003/
+  - https://github.com/enak223/project-tripwire
+author: Eliezer Fuentes
+date: 2026/06/21
+tags:
+  - attack.privilege_escalation
+  - attack.defense_evasion
+  - attack.t1548.003
+logsource:
+  product: linux
+  service: syslog
+detection:
+  selection:
+    program: sudo
+    message|contains:
+      - 'USER=root'
+      - 'COMMAND=list'
+  condition: selection
+falsepositives:
+  - Legitimate system administrators using sudo for authorized tasks
+  - Automated scripts requiring elevated privileges
+  - Software installation requiring root access
+level: low
