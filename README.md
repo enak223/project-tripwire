@@ -533,3 +533,7 @@ Detection Engineering | Threat Hunting | SOC Automation | Vulnerability Manageme
 ---
 
 > *Set the trap. Know the trigger. Never miss.*
+
+---
+
+## Bonus Case Study: Real-World T1136.001 Discovery
