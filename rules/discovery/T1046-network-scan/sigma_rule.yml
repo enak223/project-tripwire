@@ -1,0 +1,32 @@
+title: Network Service Discovery — Port Scan Detected
+id: h4i0j8k7-9g2f-0h8i-fj1j-7l2g3h4i5j6k
+status: test
+description: >
+  Detects network port scanning activity via Suricata ET SCAN signatures.
+  Attackers use port scanning tools like Nmap to identify open services
+  and attack surface before exploitation.
+references:
+  - https://attack.mitre.org/techniques/T1046/
+  - https://github.com/enak223/project-tripwire
+  - https://github.com/enak223/project-ghostnet
+author: Eliezer Fuentes
+date: 2026/06/20
+tags:
+  - attack.discovery
+  - attack.t1046
+logsource:
+  product: suricata
+  service: alert
+detection:
+  selection:
+    alert.signature|contains:
+      - 'Nmap'
+      - 'ET SCAN'
+      - 'portscan'
+      - 'port scan'
+  condition: selection
+falsepositives:
+  - Authorized vulnerability scans by security team
+  - Network monitoring tools performing health checks
+  - Penetration testing engagements
+level: medium

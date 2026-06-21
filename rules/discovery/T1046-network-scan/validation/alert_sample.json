@@ -1,0 +1,28 @@
+{
+  "rule": {
+    "id": "86601",
+    "level": 10,
+    "description": "Tripwire [T1046]: Network scan detected — ET SCAN Possible Nmap User-Agent Observed from 192.168.248.130",
+    "mitre": {
+      "id": ["T1046"],
+      "tactic": ["Discovery"],
+      "technique": ["Network Service Discovery"]
+    },
+    "groups": ["tripwire", "discovery", "network_scan", "ids", "suricata"]
+  },
+  "agent": {
+    "name": "ubuntuai",
+    "ip": "192.168.248.20"
+  },
+  "data": {
+    "alert.signature": "ET SCAN Possible Nmap User-Agent Observed",
+    "alert.signature_id": "2024364",
+    "alert.category": "Web Application Attack",
+    "alert.severity": "1",
+    "src_ip": "192.168.248.130",
+    "dest_ip": "192.168.248.139",
+    "dest_port": "80",
+    "proto": "TCP",
+    "source": "suricata"
+  }
+}

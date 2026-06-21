@@ -1,0 +1,31 @@
+<!-- Tripwire Rule: T1046 — Network Service Discovery -->
+<!-- Rule ID: 86601 overwrite | Level: 10 | Tactic: Discovery -->
+<!-- Validated: Yes | Platform: Linux (ubuntuai 192.168.248.20) -->
+<!-- Detection: Suricata ET SCAN signatures via GhostNet integration -->
+
+<group name="tripwire">
+
+  <!-- Overwrite built-in 86601 to add T1046 MITRE mapping for scan signatures -->
+  <!-- overwrite="yes" required due to Wazuh 4.12 file load order constraint -->
+  <rule id="86601" level="10" overwrite="yes">
+    <decoded_as>json</decoded_as>
+    <field name="event_type">alert</field>
+    <field name="source">suricata</field>
+    <field name="alert.signature">Nmap|ET SCAN|portscan|port.scan</field>
+    <description>Tripwire [T1046]: Network scan detected — $(alert.signature) from $(src_ip)</description>
+    <mitre>
+      <id>T1046</id>
+    </mitre>
+    <group>tripwire,discovery,network_scan,ids,suricata</group>
+  </rule>
+
+  <!-- Restore standard Suricata alert for non-scan signatures -->
+  <rule id="101012" level="3">
+    <decoded_as>json</decoded_as>
+    <field name="event_type">alert</field>
+    <field name="source">suricata</field>
+    <description>Suricata: Alert - $(alert.signature)</description>
+    <group>ids,suricata</group>
+  </rule>
+
+</group>
