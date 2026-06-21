@@ -6,7 +6,7 @@
 
 [![Status](https://img.shields.io/badge/Status-Active%20Development-brightgreen?style=flat-square)](https://github.com/enak223)
 [![Stack](https://img.shields.io/badge/Stack-Wazuh%20%7C%20Sigma%20%7C%20Atomic%20Red%20Team%20%7C%20MITRE%20ATT%26CK-blue?style=flat-square)](https://github.com/enak223)
-[![Rules](https://img.shields.io/badge/Rules-4%20Validated-orange?style=flat-square)](https://github.com/enak223/project-tripwire/tree/main/rules)
+[![Rules](https://img.shields.io/badge/Rules-10%20Validated-orange?style=flat-square)](https://github.com/enak223/project-tripwire/tree/main/rules)
 [![License](https://img.shields.io/badge/License-MIT-lightgrey?style=flat-square)](https://github.com/enak223/project-tripwire/blob/main/LICENSE)
 
 ---
@@ -33,6 +33,12 @@ Not a rule dump. A detection engineering portfolio.
 | T1136.001 | Create Account: Local Account | Persistence | 10 | Linux | ✅ Validated |
 | T1070.003 | Indicator Removal: Clear Command History | Defense Evasion | 9 | Linux | ✅ Validated |
 | T1053.003 | Scheduled Task/Job: Cron | Execution / Persistence | 10 | Linux | ✅ Validated |
+| T1110.001 | Brute Force: Password Guessing (SSH) | Credential Access | 14 | Linux | ✅ Validated |
+| T1543.003 | Create/Modify System Process: Systemd Service | Persistence | 11 | Linux | ✅ Validated |
+| T1562.001 | Impair Defenses: Disable or Modify Tools | Defense Evasion | 14 | Linux | ✅ Validated |
+| T1046 | Network Service Discovery | Discovery | 10 | Linux | ✅ Validated |
+| T1082 | System Information Discovery | Discovery | 5 | Linux | ✅ Validated |
+| T1548.003 | Abuse Elevation Control: Sudo and Sudo Caching | Privilege Escalation | 4 | Linux | ✅ Validated |
 
 ---
 
@@ -500,7 +506,7 @@ Detection rules are tuned to minimize noise:
 | v0.2 | Analyst runbooks for all 4 seed techniques | ✅ Complete |
 | v0.2 | ART validation records for all 4 seed techniques | ✅ Complete |
 | v0.2 | Wazuh CDB list updated with custom Tripwire keys | ✅ Complete |
-| v0.3 | 10 rules across 5 tactics — all ART validated | 🔄 In Progress |
+| v0.3 | 10 rules across 6 tactics — all ART validated | ✅ Complete |
 | v0.4 | ATT&CK Navigator heatmap (auto-generated) | 🔲 Planned |
 | v0.5 | 25 rules across all 12 ATT&CK tactics | 🔲 Planned |
 | v0.5 | Coverage matrix markdown report | 🔲 Planned |
