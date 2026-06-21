@@ -1,0 +1,23 @@
+<!-- Tripwire Rule: T1082 — System Information Discovery -->
+<!-- Rule IDs: 101013 (base), 101014 (alert) | Level: 5 | Tactic: Discovery -->
+<!-- Validated: Yes | Platform: Linux (ubuntu-webserver 192.168.248.139) -->
+<!-- Auditd: execve watch on uname, id, whoami, hostname -->
+
+<group name="tripwire">
+
+  <rule id="101013" level="0" noalert="1">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">tripwire_sysinfo</field>
+    <description>Tripwire base: system info discovery command executed</description>
+  </rule>
+
+  <rule id="101014" level="5">
+    <if_sid>101013</if_sid>
+    <description>Tripwire [T1082]: System information discovery — $(audit.command) executed by $(audit.auid)</description>
+    <mitre>
+      <id>T1082</id>
+    </mitre>
+    <group>tripwire,discovery,sysinfo</group>
+  </rule>
+
+</group>

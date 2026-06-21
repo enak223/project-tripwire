@@ -1,0 +1,33 @@
+title: System Information Discovery
+id: i5j1k9l8-0h3g-1i9j-gk2k-8m3h4i5j6k7l
+status: test
+description: >
+  Detects execution of system information discovery commands on Linux.
+  Attackers run commands like uname, id, whoami, and hostname to enumerate
+  the compromised system after gaining initial access.
+references:
+  - https://attack.mitre.org/techniques/T1082/
+  - https://github.com/enak223/project-tripwire
+author: Eliezer Fuentes
+date: 2026/06/21
+tags:
+  - attack.discovery
+  - attack.t1082
+logsource:
+  product: linux
+  service: auditd
+detection:
+  selection:
+    type: SYSCALL
+    key: tripwire_sysinfo
+    exe|contains:
+      - '/usr/bin/uname'
+      - '/usr/bin/id'
+      - '/usr/bin/whoami'
+      - '/usr/bin/hostname'
+  condition: selection
+falsepositives:
+  - System monitoring scripts running these commands legitimately
+  - Shell prompt configurations that run id or whoami on login
+  - Automated health check scripts
+level: low

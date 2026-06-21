@@ -1,0 +1,29 @@
+{
+  "rule": {
+    "id": "101014",
+    "level": 5,
+    "description": "Tripwire [T1082]: System information discovery — hostname executed by 1000",
+    "mitre": {
+      "id": ["T1082"],
+      "tactic": ["Discovery"],
+      "technique": ["System Information Discovery"]
+    },
+    "groups": ["tripwire", "discovery", "sysinfo"]
+  },
+  "agent": {
+    "name": "ubuntu-webserver",
+    "ip": "192.168.248.139"
+  },
+  "data": {
+    "audit": {
+      "type": "SYSCALL",
+      "key": "tripwire_sysinfo",
+      "command": "hostname",
+      "exe": "/usr/bin/hostname",
+      "auid": "1000",
+      "uid": "1000",
+      "syscall": "59",
+      "success": "yes"
+    }
+  }
+}
