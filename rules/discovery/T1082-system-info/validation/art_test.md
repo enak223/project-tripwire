@@ -23,7 +23,7 @@
     exe=/usr/bin/hostname key=tripwire_sysinfo
     AUID=u-webserver UID=u-webserver
 
-## Auditd Rules Deployed
+## Auditd Rules
 
     -a always,exit -F arch=b64 -S execve -F exe=/usr/bin/uname -F auid>=1000 -F auid!=-1 -k tripwire_sysinfo
     -a always,exit -F arch=b64 -S execve -F exe=/usr/bin/id -F auid>=1000 -F auid!=-1 -k tripwire_sysinfo
@@ -33,5 +33,4 @@
 ## Notes
 - auid>=1000 filter ensures only interactive users trigger the rule
 - auid!=-1 filter excludes kernel/system processes
-- Rule fires individually for each command executed
-- Clustering of multiple commands in a short window indicates attacker pattern
+- Multiple commands in quick succession indicates attacker pattern
